@@ -29,7 +29,7 @@ namespace RandomUtilities
             return client;
         }
 
-        public static string GetIP()
+        public static string GetPublicIP()
         {
             return new HttpClient().GetStringAsync("https://api.ipify.org").GetAwaiter().GetResult();
         }
@@ -52,6 +52,15 @@ namespace RandomUtilities
             int bufferLen = stream.Read(buffer);
 
             return Encoding.UTF8.GetString(buffer.AsSpan(0, bufferLen));
+        }
+        
+        public static TcpClient ListenForConnection(int port)
+        {
+            IPAddress local = IPAddress.Parse("127.0.0.1");
+            TcpListener listener = new(local, port);
+            listener.Start();
+
+            return listener.AcceptTcpClient();
         }
     }
 
