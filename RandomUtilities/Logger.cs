@@ -16,43 +16,46 @@ namespace RandomUtilities
             logEntries = new();
         }
 
-        public void DisplayMsg(string msg, LogLevel level)
+        public void DisplayMsg(string msg, LogLevel level, bool supress = false)
         {
-            switch (level)
+            if (!supress)
             {
-                case LogLevel.Information:
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    break;
-                case LogLevel.Warning:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    break;
-                case LogLevel.Severe:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    break;
-                case LogLevel.Error:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.BackgroundColor= ConsoleColor.Yellow;
-                    break;
-                case LogLevel.Fatal:
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.DarkRed;
-                    break;
-                default:
-                    break;
+                switch (level)
+                {
+                    case LogLevel.Information:
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        break;
+                    case LogLevel.Warning:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        break;
+                    case LogLevel.Severe:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        break;
+                    case LogLevel.Error:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+                        break;
+                    case LogLevel.Fatal:
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            DateTime errorTime = DateTime.Now;
+            DateTime logTime = DateTime.Now;
 
-            string text = $"[{errorTime}][{level}] {msg}";
+            string text = $"[{logTime}][{level}] {msg}";
 
             Console.WriteLine(text);
 
             Console.ResetColor();
 
-            logEntries.Add(new LogEntry(level, errorTime, msg));
+            logEntries.Add(new LogEntry(level, logTime, msg));
         }
 
         public void Dump(string path)
@@ -65,6 +68,19 @@ namespace RandomUtilities
             }
 
             File.WriteAllLines(path, output);
+        }
+
+        public void ThrowFatalException(Exception e)
+        {
+            Dump(RandomUtils.appdataPath);
+            throw e;
+        }
+
+        public void LogExeption(Exception e, LogLevel level)
+        {
+            string message = $"{e.Message} in {e.Source} \n\n {e.StackTrace}";
+
+            DisplayMsg(message, level, true);
         }
     }
 

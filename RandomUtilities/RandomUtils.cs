@@ -6,13 +6,28 @@ namespace RandomUtilities
 {
     public static class RandomUtils
     {
-        public static Random random;
+        public static string appdataPath;
 
-        public static void Init()
+        public static Logger defaultLogger;
+
+        public static Random random
+        {
+            get
+            {
+                return new Random();
+            }
+
+            private set
+            {
+                random = value;
+            }
+        }
+
+        public static void Init(string appdataPath)
         {
             Dictionary<int,int> dic = new Dictionary<int,int>();
-
-            random = new Random();
+            RandomUtils.appdataPath = appdataPath;
+            defaultLogger = new();
         }
     }
 }

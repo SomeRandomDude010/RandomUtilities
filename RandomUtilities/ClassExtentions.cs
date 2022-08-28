@@ -101,5 +101,40 @@ namespace RandomUtilities
         }
     }
 
-    
+    public static class BetterNumbers
+    {
+        public enum RoundType { Normal, Floor, Ceiling};
+
+        public static int Round(this float source, RoundType type = RoundType.Normal)
+        {
+            double d = Convert.ToDouble(source);
+
+            return d.Round(type);
+        }
+
+        public static int Round(this double source, RoundType type = RoundType.Normal)
+        {
+            switch (type)
+            {
+                case RoundType.Normal:
+                    return (int)Math.Round(source);
+                case RoundType.Floor:
+                    return (int)Math.Floor(source);
+                case RoundType.Ceiling:
+                    return (int)Math.Ceiling(source);
+            }
+
+            return 0;
+        }
+
+        public static int Reduce(this int source, int power)
+        {
+            if (source < 0)
+            {
+                return -(int)Math.Ceiling((float)-source / (float)power);
+            }
+
+            return (int)Math.Floor((float)source / (float)power);
+        }
+    }
 }

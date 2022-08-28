@@ -21,7 +21,7 @@ namespace RandomUtilities
             if (dlls.Count(d => d.name == name) > 0)
                 return;
 
-            Assembly dll;
+            Assembly dll = null;
 
             try
             {
@@ -29,7 +29,7 @@ namespace RandomUtilities
             }
             catch(Exception e)
             {
-                throw e;
+                RandomUtils.defaultLogger.ThrowFatalException(e);
             }
 
             Dictionary<string, ILoadableRandomClass> loadableClasses = new();
@@ -52,7 +52,27 @@ namespace RandomUtilities
                 }
             }
 
-            dlls.Add(new RandomDll(name, loadableClasses, staticClasses));
+            dlls.Add(new RandomDll(name, loadableClasses, staticClasses, dll));
+        }
+
+        public static void LoadCustomDllInterface(string name, Type customClassType)
+        {
+            if (!dlls.Exists(d => d.name == name))
+                return;
+
+            Assembly dll = dlls[GetDllIndex(name)].source;
+
+            foreach (Type t in dll.GetExportedTypes())
+            {
+                ICustomDllClass customDllBuilder = (ICustomDllClass)Activator.CreateInstance(customClassType);
+
+                ICustomDllClass customDllClass = customDllBuilder.Build(Activator.CreateInstance(t));
+
+                if (customDllClass != null)
+                {
+                    dlls[GetDllIndex(name)].customClasses.AddOrReplace(customDllClass.GetName(), customDllClass);
+                }
+            }
         }
 
         public static void InitDllLoadableClass(string name, string className, object[] args)
@@ -126,15 +146,20 @@ namespace RandomUtilities
 
         public Dictionary<string, ILoadableRandomClass> loadableClasses;
         public Dictionary<string, IStaticRandomClass> staticClasses;
+        public Dictionary<string, object> customClasses;
 
         public Dictionary<string, Dictionary<string, Func<object, object>>> staticMethods;
 
-        public RandomDll(string name, Dictionary<string, ILoadableRandomClass> loadableClasses, Dictionary<string, IStaticRandomClass> staticClasses)
+        public Assembly source;
+
+        public RandomDll(string name, Dictionary<string, ILoadableRandomClass> loadableClasses, Dictionary<string, IStaticRandomClass> staticClasses, Assembly source)
         {
             this.name = name;
             this.loadableClasses = loadableClasses;
             this.staticClasses = staticClasses;
+            this.source = source;
 
+            customClasses = new();
             staticMethods = new();
         }
     }
