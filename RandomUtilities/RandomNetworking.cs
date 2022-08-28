@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Net.Http;
-using System.Threading;
 using System.Diagnostics;
-using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 namespace RandomUtilities
 {
@@ -66,7 +63,7 @@ namespace RandomUtilities
 
     public class VerificationSender
     {
-        public static CancellationTokenSource cts = new CancellationTokenSource();
+        public static CancellationTokenSource cts = new();
 
         CancellationToken token;
         NetworkStream stream;
@@ -81,7 +78,7 @@ namespace RandomUtilities
 
         public static Thread StartThread(NetworkStream stream)
         {
-            Thread verifier = new Thread(new ParameterizedThreadStart(new VerificationSender().Init));
+            Thread verifier = new(new ParameterizedThreadStart(new VerificationSender().Init));
             verifier.Start(stream);
 
             return verifier;

@@ -7,4 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Usage", "CA2208:Argumentausnahmen korrekt instanziieren", Justification = "<Ausstehend>", Scope = "member", Target = "~M:RandomUtilities.BetterCollections.IndexOf``1(System.Collections.Generic.IEnumerable{``0},``0)~System.Int32")]
 [assembly: SuppressMessage("Usage", "CA2200:Erneut ausführen, um Stapeldetails beizubehalten", Justification = "<Ausstehend>", Scope = "member", Target = "~M:RandomUtilities.DLLLoader.LoadDll(System.String,System.String)")]
-[assembly: SuppressMessage("Performance", "CA1822:Member als statisch markieren", Justification = "<Ausstehend>", Scope = "member", Target = "~M:RandomUtilities.Logger.DisplayMsg(System.String,RandomUtilities.LogLevel)")]
+[assembly: SuppressMessage("Style", "IDE0019:Musterabgleich verwenden", Justification = "<Ausstehend>", Scope = "member", Target = "~M:RandomUtilities.DLLLoader.LoadDll(System.String,System.String)")]

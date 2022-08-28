@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace RandomUtilities
 {
@@ -11,7 +9,7 @@ namespace RandomUtilities
 
         public static Logger defaultLogger;
 
-        public static Random random
+        public static Random Random
         {
             get
             {
@@ -20,13 +18,12 @@ namespace RandomUtilities
 
             private set
             {
-                random = value;
+                Random = value;
             }
         }
 
         public static void Init(string appdataPath)
         {
-            Dictionary<int,int> dic = new Dictionary<int,int>();
             RandomUtils.appdataPath = appdataPath;
             defaultLogger = new();
         }

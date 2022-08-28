@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 
 namespace RandomUtilities
@@ -18,7 +16,7 @@ namespace RandomUtilities
 
         public static void LoadDll(string name, string path)
         {
-            if (dlls.Count(d => d.name == name) > 0)
+            if (dlls.Any(d => d.name == name))
                 return;
 
             Assembly dll = null;
@@ -27,7 +25,7 @@ namespace RandomUtilities
             {
                 dll = Assembly.LoadFile(path);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 RandomUtils.defaultLogger.ThrowFatalException(e);
             }
@@ -38,15 +36,15 @@ namespace RandomUtilities
             foreach (Type t in dll.GetExportedTypes())
             {
                 ILoadableRandomClass loadableClass = Activator.CreateInstance(t) as ILoadableRandomClass;
-                
-                if(loadableClass != null)
+
+                if (loadableClass != null)
                 {
                     loadableClasses.AddOrReplace(loadableClass.GetName(), loadableClass);
                 }
 
                 IStaticRandomClass staticClass = Activator.CreateInstance(t) as IStaticRandomClass;
 
-                if(staticClass != null)
+                if (staticClass != null)
                 {
                     staticClasses.AddOrReplace(staticClass.GetName(), staticClass);
                 }
@@ -107,14 +105,14 @@ namespace RandomUtilities
             dlls[GetDllIndex(name)].staticMethods.Add(className, staticClass.GetMethods());
         }
 
-        public static object ExectuteStaticMethod(string name, string className, string methName, object[] args) 
+        public static object ExectuteStaticMethod(string name, string className, string methName, object[] args)
         {
-            if(!dlls.Exists(d => d.name == name))
+            if (!dlls.Exists(d => d.name == name))
                 return null;
 
             if (!dlls[GetDllIndex(name)].staticMethods.ContainsKey(className))
                 return null;
-            if(!dlls[GetDllIndex(name)].staticMethods[className].ContainsKey(methName))
+            if (!dlls[GetDllIndex(name)].staticMethods[className].ContainsKey(methName))
                 return null;
 
             return dlls[GetDllIndex(name)].staticMethods[className][methName](args);
